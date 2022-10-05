@@ -10,34 +10,98 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role{
+enum Role {
   user
   admin
 }
 
-enum Gender{
+enum Gender {
   male
   female
 }
 
-model Users {
-  id Int @id @default(autoincrement())
-  role Role @default(user)
-  first_name String
-  last_name String
-  phone String
-  email String @unique
-  username String @unique
-  address String
-  gender Gender
-  birth_date DateTime
-  country_id String
-  city String
-  category String
-  document_id String
-  user_state String
-  created_at DateTime @default(now())
-  updated_at DateTime
-  deleted_at DateTime
+enum Category {
+  deposit
+  withdraw
+  bet
+  winning
+}
 
+enum Status {
+  active
+  cancelled
+  settled
+}
+
+enum Result {
+  won
+  lost
+}
+
+enum State {
+  open
+  won
+  lost
+}
+
+model User {
+  id           String        @id @default(uuid())
+  role         Role          @default(user)
+  first_name   String
+  last_name    String
+  phone        String
+  email        String        @unique
+  username     String        @unique
+  address      String
+  gender       Gender
+  birth_date   DateTime
+  country_id   String
+  city         String
+  category     String
+  document_id  String
+  user_state   String
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  deleted_at   DateTime
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     String
+  amount      Float
+  category    Category
+  status      String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  deleted_at  DateTime
+  deleted     String
+  user_bet_id String
+}
+
+model Bet {
+  id         String   @id @default(uuid())
+  bet_option Int
+  sport      String
+  status     Status
+  name       String
+  event_id   String
+  odd        String
+  result     Result
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime
+  deleted    String
+}
+
+model User_bets {
+  id         String   @id @default(uuid())
+  user_id    String
+  bet_id     String
+  state      State
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime
+  deleted    String
 }

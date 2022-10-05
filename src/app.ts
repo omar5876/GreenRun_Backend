@@ -7,7 +7,7 @@ export const init = async () => {
     });
 
     await server.start();
-    console.log("Server is running on port %s", server.info.uri)
+    console.log("Server is running on port", server.info.uri)
 }
 
 process.on('unhandledRejection', err => {   //handled an error if there's a problem
